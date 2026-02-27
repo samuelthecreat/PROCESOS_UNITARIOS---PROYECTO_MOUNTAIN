@@ -654,38 +654,85 @@ with tab5:
 # ==============================
 # VISOR DE DOCUMENTOS
 # ==============================
-@st.dialog("📖 Visor de Documentos Integrado", width="large")
+@st.dialog("📖 Visor de Documentos", width="large")
 def visor_documento(file_path, file_type):
-    if file_type == "docx":
-        try:
-            import mammoth
-            with st.spinner("Renderizando documento..."):
-                with open(file_path, "rb") as docx_file:
-                    result = mammoth.convert_to_html(docx_file)
-                    html_content = result.value
-                
-                st.markdown(
-                    f"<div style='font-family: Inter, sans-serif; color: #334155; line-height: 1.6; padding: 10px;'>{html_content}</div>",
-                    unsafe_allow_html=True
-                )
-        except ImportError:
-            st.error("Librería 'mammoth' no instalada. No se puede previsualizar .docx.")
-        except Exception as e:
-            st.error(f"Error al cargar el documento: {e}")
-            
-    elif file_type == "md":
-        try:
-            with open(file_path, "r", encoding="utf-8") as f:
-                md_content = f.read()
-            st.markdown(md_content)
-        except Exception as e:
-            st.error(f"Error al cargar el documento: {e}")
+    st.markdown("""
+        <style>
+        .doc-paper {
+            background-color: #ffffff;
+            padding: 2rem 3rem;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+            color: #334155;
+            font-family: 'Inter', -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+        .doc-paper h1, .doc-paper h2, .doc-paper h3 {
+            color: #0f172a;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+        }
+        .doc-paper table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        .doc-paper th, .doc-paper td {
+            border: 1px solid #cbd5e1;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .doc-paper th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+        .doc-paper p {
+            margin-bottom: 1.2rem;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.caption(f"**Archivo:** `{Path(file_path).name}`")
+
+    with st.container(height=650):
+        if file_type == "docx":
+            try:
+                import mammoth
+                with st.spinner("Renderizando documento..."):
+                    with open(file_path, "rb") as docx_file:
+                        result = mammoth.convert_to_html(docx_file)
+                        html_content = result.value
+
+                    st.markdown(
+                        f"<div class='doc-paper'>{html_content}</div>",
+                        unsafe_allow_html=True
+                    )
+            except ImportError:
+                st.error("Librería 'mammoth' no instalada. Ejecute `pip install mammoth`.")
+            except Exception as e:
+                st.error(f"Error al cargar el documento: {e}\n\nAsegúrese de que el archivo es un documento .docx válido (no .md renombrado).")
+
+        elif file_type == "md":
+            try:
+                with open(file_path, "r", encoding="utf-8") as f:
+                    md_content = f.read()
+
+                # Para el markdown nativo, aplicamos estilos mediante un contenedor con borde
+                with st.container():
+                    st.markdown(md_content)
+            except Exception as e:
+                st.error(f"Error al cargar el documento: {e}")
+
+    if st.button("Cerrar Visor", type="secondary", use_container_width=True):
+        st.rerun()
 
 # Lógica compartida para invocar el modal
 if "preview_file" in st.session_state and st.session_state.preview_file:
     visor_documento(st.session_state.preview_file, st.session_state.preview_type)
     st.session_state.preview_file = None
-
 # ==============================
 # TAB 6: DOCUMENTACIÓN
 # ==============================
