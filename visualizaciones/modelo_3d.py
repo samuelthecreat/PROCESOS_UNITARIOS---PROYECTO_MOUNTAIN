@@ -269,7 +269,6 @@ def generar_html_modelo_3d(
             let orbitAngle = {{ theta: 0.7, phi: 0.5 }};
             let orbitRadius = 18;
             let panOffset = {{ x: 0, y: 0, z: 0 }};
-            let targetPan = {{ x: 0, y: 0, z: 0 }};
 
             // Raycaster for tooltips
             const raycaster = new THREE.Raycaster();
@@ -329,7 +328,7 @@ def generar_html_modelo_3d(
                         tooltip.style.display = 'block';
                         tooltip.style.left = (e.clientX + 10) + 'px';
                         tooltip.style.top = (e.clientY + 10) + 'px';
-                        tooltip.innerHTML = obj.userData.tooltip;
+                        tooltip.textContent = obj.userData.tooltip;
                         document.body.style.cursor = 'pointer';
                     }}
                 }} else {{
@@ -395,7 +394,7 @@ def generar_html_modelo_3d(
             const tubeMesh = new THREE.Mesh(tubeGeometry, tubeMaterial);
             tubeMesh.castShadow = true;
             tubeMesh.receiveShadow = true;
-            tubeMesh.userData = {{ tooltip: `<b>Tubería Principal</b><br>L: ${{TRAMO.longitud.toFixed(1)}} m<br>D: ${{TRAMO.diametro.toFixed(2)}} u` }};
+            tubeMesh.userData = {{ tooltip: "Tubería Principal (L: " + TRAMO.longitud.toFixed(1) + "m)" }};
             scene.add(tubeMesh);
             interactables.push(tubeMesh);
 
@@ -412,7 +411,7 @@ def generar_html_modelo_3d(
             const tankIn = new THREE.Mesh(tankGeo, tankMat);
             tankIn.position.set(-halfL - 0.9, tubePoints[0].y, 0);
             tankIn.castShadow = true;
-            tankIn.userData = {{ tooltip: "<b>Inicio Tramo</b><br>Conexión anterior" }};
+            tankIn.userData = {{ tooltip: "Inicio Tramo" }};
             scene.add(tankIn);
             interactables.push(tankIn);
 
@@ -420,7 +419,7 @@ def generar_html_modelo_3d(
             const tankOut = new THREE.Mesh(tankGeo.clone(), tankMat.clone());
             tankOut.position.set(halfL + 0.9, tubePoints[tubePoints.length-1].y, 0);
             tankOut.castShadow = true;
-            tankOut.userData = {{ tooltip: "<b>Fin Tramo</b><br>Siguiente conexión" }};
+            tankOut.userData = {{ tooltip: "Fin Tramo" }};
             scene.add(tankOut);
             interactables.push(tankOut);
 
@@ -440,7 +439,7 @@ def generar_html_modelo_3d(
                 bombaGroup.add(bBase);
 
                 bombaGroup.position.set(-halfL + 1.5, tubePoints[2].y + 0.2, 0);
-                bombaGroup.userData = {{ tooltip: "<b>Estación de Bombeo</b><br>Impulsión activa" }};
+                bombaGroup.userData = {{ tooltip: "Estación de Bombeo" }};
                 scene.add(bombaGroup);
                 interactables.push(bBody); // Add specific mesh to raycaster
 
@@ -456,7 +455,7 @@ def generar_html_modelo_3d(
                 );
                 valBody.rotation.y = Math.PI/2;
                 valBody.position.set(halfL - 1.5, tubePoints[tubePoints.length-3].y, 0);
-                valBody.userData = {{ tooltip: "<b>Válvula de Control</b><br>Regulación de flujo" }};
+                valBody.userData = {{ tooltip: "Válvula de Control" }};
                 valBody.castShadow = true;
                 scene.add(valBody);
                 interactables.push(valBody);
@@ -466,17 +465,50 @@ def generar_html_modelo_3d(
                 scene.add(light);
             }}
 
+            // ===== Accesorios (Codos) =====
+            let codoCount = 0;
+            TRAMO.accesorios.forEach(acc => {{
+                if (acc.nombre && acc.nombre.toLowerCase().includes('codo') && acc.cantidad > 0) {{
+                    for (let c = 0; c < acc.cantidad; c++) {{
+                        codoCount++;
+                        const t = codoCount / (acc.cantidad + 2); // Distribute simply
+                        // A bit of offset logic
+                        const t_pos = 0.2 + (0.6 * (c+1)/(acc.cantidad+1));
+                        const pos = tubePath.getPoint(t_pos);
+
+                        const codoGeo = new THREE.TorusGeometry(TRAMO.diametro * 1.2, TRAMO.diametro * 0.2, 16, 24, Math.PI / 2);
+                        const codoMat = new THREE.MeshStandardMaterial({{ color: 0x94a3b8, roughness: 0.3, metalness: 0.8 }});
+                        const codo = new THREE.Mesh(codoGeo, codoMat);
+
+                        codo.position.copy(pos);
+                        // Orient randomly to look like fittings
+                        codo.rotation.x = Math.random() * Math.PI;
+                        codo.rotation.y = Math.random() * Math.PI;
+                        codo.castShadow = true;
+                        codo.userData = {{ tooltip: "Codo / Accesorio" }};
+
+                        scene.add(codo);
+                        interactables.push(codo);
+                    }}
+                }}
+            }});
+
             // ===== Partículas (Flujo) =====
-            const particleCount = 300;
+            const particleCount = 200; // Reduced for performance
             const pGeo = new THREE.BufferGeometry();
             const pPos = new Float32Array(particleCount * 3);
-            const pPhase = new Float32Array(particleCount);
-            const pSpeed = new Float32Array(particleCount);
+            // Pre-calculate random values for better performance
+            const pOffsets = [];
 
             for(let i=0; i<particleCount; i++) {{
-                pPhase[i] = Math.random();
-                pSpeed[i] = 0.2 + Math.random() * 0.3;
-                // Initial placement handled in animate
+                const r = TRAMO.diametro * 0.35;
+                const theta = Math.random() * Math.PI * 2;
+                pOffsets.push({{
+                    r: r * (0.5 + Math.random() * 0.5),
+                    theta: theta,
+                    speed: 0.2 + Math.random() * 0.3,
+                    phase: Math.random()
+                }});
             }}
             pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
 
@@ -499,11 +531,26 @@ def generar_html_modelo_3d(
                 canvas.width = 256; canvas.height = 64;
                 const ctx = canvas.getContext('2d');
                 ctx.fillStyle = 'rgba(15, 23, 42, 0.8)';
-                ctx.roundRect(0, 0, 256, 64, 12);
+
+                // Manual Rounded Rect for compatibility
+                const x = 0, y = 0, w = 256, h = 64, r = 12;
+                ctx.beginPath();
+                ctx.moveTo(x + r, y);
+                ctx.lineTo(x + w - r, y);
+                ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+                ctx.lineTo(x + w, y + h - r);
+                ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+                ctx.lineTo(x + r, y + h);
+                ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+                ctx.lineTo(x, y + r);
+                ctx.quadraticCurveTo(x, y, x + r, y);
+                ctx.closePath();
                 ctx.fill();
+
                 ctx.strokeStyle = '#38bdf8';
                 ctx.lineWidth = 4;
                 ctx.stroke();
+
                 ctx.fillStyle = '#f8fafc';
                 ctx.font = 'bold 32px Inter, sans-serif';
                 ctx.textAlign = 'center';
@@ -556,22 +603,21 @@ def generar_html_modelo_3d(
                 const delta = clock.getDelta();
                 const elapsed = clock.getElapsedTime();
 
-                // Particle System Update
+                // Optimized Particle System Update
                 const positions = particles.geometry.attributes.position.array;
                 for(let i=0; i<particleCount; i++) {{
-                    pPhase[i] += pSpeed[i] * delta * 0.4;
-                    if(pPhase[i] > 1) pPhase[i] -= 1;
+                    const p = pOffsets[i];
+                    p.phase += p.speed * delta * 0.4;
+                    if(p.phase > 1) p.phase -= 1;
 
-                    const t = pPhase[i];
-                    const curvePos = tubePath.getPoint(t);
+                    const curvePos = tubePath.getPoint(p.phase);
 
-                    // Add turbulence/swirl
-                    const r = TRAMO.diametro * 0.35;
-                    const theta = elapsed * 2 + i;
+                    // Simple rotation for swirl effect without heavy math
+                    const angle = p.theta + elapsed * 2;
 
-                    positions[i*3] = curvePos.x + Math.cos(theta)*r * (Math.random()*0.5+0.5);
-                    positions[i*3+1] = curvePos.y + Math.sin(theta)*r * (Math.random()*0.5+0.5);
-                    positions[i*3+2] = curvePos.z + Math.sin(theta*1.5)*r*0.5;
+                    positions[i*3] = curvePos.x + Math.cos(angle) * p.r;
+                    positions[i*3+1] = curvePos.y + Math.sin(angle) * p.r;
+                    positions[i*3+2] = curvePos.z;
                 }}
                 particles.geometry.attributes.position.needsUpdate = true;
 

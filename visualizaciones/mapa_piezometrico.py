@@ -237,20 +237,21 @@ def crear_mapa_piezometrico(resultados: dict, Q: float, D: float) -> go.Figure:
         row=2, col=1,
     )
 
-    # Anotaciones de presión negativa
-    min_presion = min(presion_puntos)
-    if min_presion < 0:
-        idx_min = presion_puntos.index(min_presion)
-        fig.add_annotation(
-            x=dist_puntos[idx_min], y=min_presion,
-            text=f'<b>⚠️ Cavitación ({min_presion:.1f} m)</b>',
-            showarrow=True,
-            arrowhead=2,
-            arrowcolor='#EF4444',
-            font=dict(size=12, color='#EF4444', family="Inter, sans-serif"),
-            bgcolor="rgba(0,0,0,0.8)",
-            row=2, col=1,
-        )
+    # Anotaciones de presión negativa (Fix: Check for empty list)
+    if presion_puntos:
+        min_presion = min(presion_puntos)
+        if min_presion < 0:
+            idx_min = presion_puntos.index(min_presion)
+            fig.add_annotation(
+                x=dist_puntos[idx_min], y=min_presion,
+                text=f'<b>⚠️ Cavitación ({min_presion:.1f} m)</b>',
+                showarrow=True,
+                arrowhead=2,
+                arrowcolor='#EF4444',
+                font=dict(size=12, color='#EF4444', family="Inter, sans-serif"),
+                bgcolor="rgba(0,0,0,0.8)",
+                row=2, col=1,
+            )
     
     # ====== Formato ======
     fig.update_layout(

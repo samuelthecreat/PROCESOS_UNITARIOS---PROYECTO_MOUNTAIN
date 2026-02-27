@@ -273,6 +273,7 @@ for key, val in DEFAULTS.items():
 def reset_defaults():
     for k, v in DEFAULTS.items():
         st.session_state[k] = v
+    st.rerun()
 
 # ====================================
 # SIDEBAR REFACTORED
@@ -514,8 +515,13 @@ with tab_home:
 # ==============================
 with tab_map:
     st.markdown("### Líneas de Energía y Gradiente Hidráulico")
-    st.caption("Visualización de las presiones a lo largo de todo el recorrido. Las líneas roja (EGL) y amarilla (HGL) indican la energía disponible.")
+    st.caption("Visualización de las presiones a lo largo de todo el recorrido. La línea **cian (EGL)** representa la energía total y la **amarilla (HGL)** el gradiente hidráulico.")
     
+    st.info(
+        "**Interpretación:** La diferencia vertical entre la línea de energía (EGL) y la tubería representa la presión disponible. "
+        "Si la línea de gradiente hidráulico (HGL) cruza por debajo de la tubería, existe riesgo de **presión negativa y cavitación**."
+    )
+
     fig_piezo = crear_mapa_piezometrico(resultados, st.session_state.Q, st.session_state.D)
     st.plotly_chart(fig_piezo, use_container_width=True)
 
@@ -627,6 +633,11 @@ with tab_3d:
     html_3d = generar_modelo_tramo(tramo_3d, resultados)
     components.html(html_3d, height=720, scrolling=False)
     
+    st.caption(
+        "**Leyenda Visual:** El gradiente de color (Azul → Rojo) indica la caída de presión a lo largo del tramo. "
+        "Las partículas blancas representan el flujo turbulento del agua."
+    )
+
     if defn_3d.get('notas'):
         st.info(f"**Nota Técnica:** {defn_3d['notas']}")
 
@@ -686,14 +697,26 @@ with tab_data:
 # ==============================
 @st.dialog("📖 Visor de Documentos", width="large")
 def visor_documento(file_path, file_type):
+    # Updated CSS for Dark Theme Compatibility
     st.markdown("""
         <style>
         .doc-paper {
-            background-color: #ffffff;
+            background-color: #1e293b; /* Slate 800 */
+            color: #e2e8f0; /* Slate 200 */
             padding: 2rem 3rem;
             border-radius: 4px;
-            color: #334155;
+            border: 1px solid #334155;
             line-height: 1.6;
+        }
+        .doc-paper h1, .doc-paper h2, .doc-paper h3 {
+            color: #38bdf8; /* Sky 400 */
+            border-bottom: 1px solid #334155;
+        }
+        .doc-paper table {
+            border-color: #334155;
+        }
+        .doc-paper th, .doc-paper td {
+            border: 1px solid #475569;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -707,8 +730,10 @@ def visor_documento(file_path, file_type):
                     with open(file_path, "rb") as docx_file:
                         result = mammoth.convert_to_html(docx_file)
                         st.markdown(f"<div class='doc-paper'>{result.value}</div>", unsafe_allow_html=True)
+            except ImportError:
+                st.error("Error: La librería 'mammoth' no está instalada. Ejecute `pip install mammoth`.")
             except Exception as e:
-                st.error(f"Error: {e}")
+                st.error(f"Error inesperado al abrir el documento: {e}")
         elif file_type == "md":
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
@@ -736,6 +761,11 @@ with tab_docs:
                 with st.container(height=500, border=True):
                     st.markdown(f.read())
 
+            if st.button("🔍 Abrir en Visor Completo", key="preview_md_btn"):
+                st.session_state.preview_file = str(md_path)
+                st.session_state.preview_type = "md"
+                st.rerun()
+
     with col_d2:
         st.success("Descargas Disponibles")
         informe_path = Path("source/INFORME_PROYECTO.docx")
@@ -746,6 +776,11 @@ with tab_docs:
                     file_name="Informe_Proyecto.docx",
                     use_container_width=True
                 )
+
+            if st.button("👁️ Vista Previa Informe", key="preview_docx_btn", use_container_width=True):
+                st.session_state.preview_file = str(informe_path)
+                st.session_state.preview_type = "docx"
+                st.rerun()
 
 
 # ====================================
