@@ -144,6 +144,37 @@ st.markdown("""
         border-color: #cbd5e1;
         background-color: #f8fafc;
     }
+    
+    /* GitHub Button */
+    .github-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background-color: #ffffff;
+        color: #0f172a !important;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        text-decoration: none !important;
+    }
+    .github-btn:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        transform: translateY(-1px);
+    }
+    .github-btn svg {
+        fill: #0f172a;
+        transition: transform 0.2s ease;
+    }
+    .github-btn:hover svg {
+        transform: scale(1.05);
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -176,6 +207,11 @@ with st.sidebar.container(border=True):
                 use_container_width=True,
                 key="sidebar_download_informe"
             )
+        
+        if st.button("👁️ Vista Previa", use_container_width=True, key="sidebar_preview"):
+            st.session_state.preview_file = str(informe_path)
+            st.session_state.preview_type = "docx"
+            st.rerun()
     else:
         st.error("Archivo no encontrado")
 
@@ -276,8 +312,27 @@ pot_total_hp = kw_a_hp(pot_total_kw) if pot_total_kw > 0 else 0
 # ====================================
 # TÍTULO PRINCIPAL
 # ====================================
-st.markdown("<h1 style='color: #0f172a; font-weight: 800; font-size: 2.2rem; letter-spacing: -0.03em; margin-bottom: 0;'>Sistema Hidráulico</h1>", unsafe_allow_html=True)
-st.markdown("<h3 style='color: #64748b; font-weight: 400; font-size: 1.2rem; margin-top: 0.2rem; margin-bottom: 1.5rem;'>Dashboard de Análisis Dinámico</h3>", unsafe_allow_html=True)
+col_title, col_github = st.columns([4, 1])
+
+with col_title:
+    st.markdown("<h1 style='color: #0f172a; font-weight: 800; font-size: 2.2rem; letter-spacing: -0.03em; margin-bottom: 0;'>Sistema Hidráulico</h1>", unsafe_allow_html=True)
+    st.markdown("<h3 style='color: #64748b; font-weight: 400; font-size: 1.2rem; margin-top: 0.2rem; margin-bottom: 1.5rem;'>Dashboard de Análisis Dinámico</h3>", unsafe_allow_html=True)
+
+with col_github:
+    st.markdown("<div style='height: 1.2rem;'></div>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div style='display: flex; justify-content: flex-end;'>
+            <a href="https://github.com/samuelthecreat/PROCESOS_UNITARIOS---PROYECTO_MOUNTAIN" target="_blank" class="github-btn">
+                <svg height="18" width="18" viewBox="0 0 16 16">
+                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+                </svg>
+                <span>GitHub</span>
+            </a>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 st.markdown(
     "Este panel permite simular y analizar el transporte de agua desde una fuente natural, "
@@ -597,6 +652,41 @@ with tab5:
 
 
 # ==============================
+# VISOR DE DOCUMENTOS
+# ==============================
+@st.dialog("📖 Visor de Documentos Integrado", width="large")
+def visor_documento(file_path, file_type):
+    if file_type == "docx":
+        try:
+            import mammoth
+            with st.spinner("Renderizando documento..."):
+                with open(file_path, "rb") as docx_file:
+                    result = mammoth.convert_to_html(docx_file)
+                    html_content = result.value
+                
+                st.markdown(
+                    f"<div style='font-family: Inter, sans-serif; color: #334155; line-height: 1.6; padding: 10px;'>{html_content}</div>",
+                    unsafe_allow_html=True
+                )
+        except ImportError:
+            st.error("Librería 'mammoth' no instalada. No se puede previsualizar .docx.")
+        except Exception as e:
+            st.error(f"Error al cargar el documento: {e}")
+            
+    elif file_type == "md":
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                md_content = f.read()
+            st.markdown(md_content)
+        except Exception as e:
+            st.error(f"Error al cargar el documento: {e}")
+
+# Lógica compartida para invocar el modal
+if "preview_file" in st.session_state and st.session_state.preview_file:
+    visor_documento(st.session_state.preview_file, st.session_state.preview_type)
+    st.session_state.preview_file = None
+
+# ==============================
 # TAB 6: DOCUMENTACIÓN
 # ==============================
 with tab6:
@@ -613,7 +703,7 @@ with tab6:
     with col_doc1:
         st.subheader("📖 Vista Previa del Proyecto")
         
-        # Leemos el archivo markdown del proyecto para la vista previa
+        # Leemos el archivo markdown del proyecto para la vista previa principal
         md_path = Path("media/docs/PROYECTO.MD")
         md_content = "⚠️ Contenido no disponible."
         if md_path.exists():
@@ -629,6 +719,11 @@ with tab6:
                 unsafe_allow_html=True
             )
             st.markdown(md_content)
+            
+        if st.button("🔍 Abrir en Visor Completo", key="preview_md"):
+            st.session_state.preview_file = str(md_path)
+            st.session_state.preview_type = "md"
+            st.rerun()
         
     with col_doc2:
         st.subheader("📥 Descargas")
@@ -654,6 +749,11 @@ with tab6:
                         use_container_width=True,
                         key="main_download_informe"
                     )
+                
+                if st.button("👁️ Vista Previa", use_container_width=True, key="main_preview"):
+                    st.session_state.preview_file = str(informe_path_tab)
+                    st.session_state.preview_type = "docx"
+                    st.rerun()
             else:
                 st.error("⚠️ Documento no disponible.")
 
