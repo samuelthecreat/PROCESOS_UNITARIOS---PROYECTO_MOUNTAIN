@@ -1,0 +1,79 @@
+# Entorno virtual
+.venv/
+venv/
+env/
+ENV/
+
+# Cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribuciones
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# Streamlit
+.streamlit/
+.streamlit/secrets.toml
+
+# Archivos temporales
+*.tmp
+*.bak
+*.log
+.DS_Store
+Thumbs.db
+
+# Binarios y ejecutables
+cloudflared
+get-pip.py
+
+# Ambiente
+.env
+.env.local
+.env.*.local
+
+# Editor
+*.sublime-project
+*.sublime-workspace
+
+# Caché de mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pytest
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IPython Notebook
+.ipynb_checkpoints
+
+# Sistema de archivos
+.AppleDouble
+.LSOverride
