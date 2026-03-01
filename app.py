@@ -42,10 +42,112 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# CSS personalizado para Tema Dark Engineering
+# CSS global para animaciones de transición
+st.markdown("""
+<style>
+    * { transition: background-color 0.2s ease, border-color 0.2s ease; }
+</style>
+""", unsafe_allow_html=True)
+
+# CSS personalizado para Tema Dark Engineering (Versión Optimizada)
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    /* ======================== ANIMACIONES KEYFRAMES ======================== */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.7;
+        }
+    }
+    
+    @keyframes glow {
+        0%, 100% {
+            box-shadow: 0 0 5px rgba(56, 189, 248, 0.3), inset 0 0 5px rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.6), inset 0 0 10px rgba(56, 189, 248, 0.2);
+            border-color: rgba(56, 189, 248, 0.8);
+        }
+    }
+    
+    @keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    @keyframes borderFlow {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
     
     html, body, [class*="css"] {
         font-family: 'Inter', sans-serif;
@@ -58,24 +160,32 @@ st.markdown("""
         background-color: #0a0f1e;
     }
     
-    /* Modern Metric Cards */
+    /* Modern Metric Cards con animaciones */
     [data-testid="stMetric"] {
         background-color: #111827; /* Gray 900 */
         border-radius: 12px;
         padding: 20px;
         box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
         border: 1px solid #1f2937; /* Gray 800 */
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        animation: fadeInUp 0.6s ease-out;
     }
+    
+    [data-testid="stMetric"]:nth-child(1) { animation-delay: 0.1s; }
+    [data-testid="stMetric"]:nth-child(2) { animation-delay: 0.2s; }
+    [data-testid="stMetric"]:nth-child(3) { animation-delay: 0.3s; }
+    [data-testid="stMetric"]:nth-child(4) { animation-delay: 0.4s; }
     
     [data-testid="stMetric"]:hover {
         border-color: #38bdf8; /* Sky 400 */
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), 0 10px 15px -3px rgba(0,0,0,0.5);
+        transform: translateY(-4px);
     }
     
     [data-testid="stMetricValue"] {
         color: #38bdf8 !important; /* Sky 400 */
         font-weight: 700;
+        animation: pulse 2s ease-in-out infinite;
     }
     
     [data-testid="stMetricLabel"] {
@@ -83,7 +193,7 @@ st.markdown("""
         font-size: 0.9rem;
     }
 
-    /* Tabs Styling */
+    /* Tabs Styling con animaciones */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
         padding: 0;
@@ -102,12 +212,14 @@ st.markdown("""
         border-bottom: 2px solid transparent;
         color: #64748b;
         font-weight: 500;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
+        position: relative;
     }
     
     .stTabs [data-baseweb="tab"]:hover {
         color: #e2e8f0;
         border-bottom: 2px solid #475569;
+        transform: translateY(-2px);
     }
     
     .stTabs [aria-selected="true"] {
@@ -115,38 +227,75 @@ st.markdown("""
         color: #38bdf8 !important; /* Sky 400 */
         border-bottom: 2px solid #38bdf8 !important;
         font-weight: 600;
+        animation: slideInLeft 0.4s ease-out;
     }
     
-    /* Expander Styling */
+    /* Expander Styling con animaciones */
     [data-testid="stExpander"] {
         border: 1px solid #1f2937;
         border-radius: 8px;
         background-color: #111827; /* Gray 900 */
+        animation: fadeInUp 0.5s ease-out;
+        transition: all 0.3s ease;
     }
+    
+    [data-testid="stExpander"]:hover {
+        border-color: #38bdf8;
+        box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+    
     [data-testid="stExpander"] > details > summary {
         color: #e2e8f0;
         font-weight: 500;
+        transition: all 0.3s ease;
+        cursor: pointer;
     }
+    
     [data-testid="stExpander"] > details > summary:hover {
+        color: #38bdf8;
+        text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+    
+    [data-testid="stExpander"] > details[open] > summary {
         color: #38bdf8;
     }
     
-    /* Buttons */
+    /* Buttons con animaciones */
     .stButton > button {
         border-radius: 8px;
         font-weight: 600;
         border: 1px solid #334155;
         background-color: #1e293b;
         color: #e2e8f0;
-        transition: all 0.2s ease;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
     }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.2), transparent);
+        transition: left 0.5s ease;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
+    }
+    
     .stButton > button:hover {
         border-color: #38bdf8;
         color: #38bdf8;
         background-color: #0f172a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
     }
 
-    /* GitHub Button Custom */
+    /* GitHub Button Custom con animaciones */
     .github-btn {
         display: inline-flex;
         align-items: center;
@@ -158,25 +307,31 @@ st.markdown("""
         border-radius: 20px;
         font-weight: 600;
         font-size: 0.85rem;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         border: 1px solid #334155;
         text-decoration: none !important;
+        animation: scaleIn 0.5s ease-out 0.5s backwards;
     }
+    
     .github-btn:hover {
         background-color: #0f172a;
         border-color: #38bdf8;
         color: #38bdf8 !important;
-        transform: translateY(-1px);
-    }
-    .github-btn svg {
-        fill: #e2e8f0;
-        transition: fill 0.2s ease;
-    }
-    .github-btn:hover svg {
-        fill: #38bdf8;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
     }
     
-    /* Dev Card (Sidebar) */
+    .github-btn svg {
+        fill: #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    
+    .github-btn:hover svg {
+        fill: #38bdf8;
+        animation: float 1.5s ease-in-out infinite;
+    }
+    
+    /* Dev Card (Sidebar) con animaciones */
     .dev-card {
         margin-top: 2rem;
         padding: 1.5rem 1rem;
@@ -187,13 +342,23 @@ st.markdown("""
         text-align: center;
         position: relative;
         overflow: hidden;
+        animation: scaleIn 0.6s ease-out;
+        transition: all 0.3s ease;
     }
+    
+    .dev-card:hover {
+        border-color: #38bdf8;
+        box-shadow: 0 8px 16px rgba(56, 189, 248, 0.2);
+    }
+    
     .dev-card::before {
         content: '';
         position: absolute;
         top: 0; left: 0; right: 0;
         height: 2px;
         background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+        animation: borderFlow 3s ease-in-out infinite;
+        background-size: 200% 100%;
     }
     .dev-label {
         font-size: 0.7rem;
@@ -216,9 +381,10 @@ st.markdown("""
         margin: 0.5rem 0;
     }
 
-    /* Hero Section */
+    /* Hero Section con animaciones */
     .hero-container {
-        background: linear-gradient(to right, #0f172a, #1e293b);
+        background: linear-gradient(135deg, #0f172a, #1e293b, #0f172a);
+        background-size: 200% 200%;
         padding: 2rem;
         border-radius: 16px;
         border: 1px solid #1e293b;
@@ -227,14 +393,38 @@ st.markdown("""
         align-items: center;
         gap: 1.5rem;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        animation: fadeInUp 0.8s ease-out, borderFlow 6s ease-in-out infinite;
+        position: relative;
+        overflow: hidden;
     }
+    
+    .hero-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.1), transparent);
+        animation: slideInLeft 3s ease-in-out infinite;
+    }
+    
     .hero-icon {
         font-size: 3rem;
         background: rgba(56, 189, 248, 0.1);
         padding: 1rem;
         border-radius: 12px;
         border: 1px solid rgba(56, 189, 248, 0.2);
+        animation: float 3s ease-in-out infinite;
+        transition: all 0.3s ease;
     }
+    
+    .hero-icon:hover {
+        animation: float 1.5s ease-in-out infinite;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+        transform: scale(1.1);
+    }
+    
     .hero-text h1 {
         color: #f8fafc;
         margin: 0;
@@ -244,11 +434,96 @@ st.markdown("""
         background: linear-gradient(90deg, #f8fafc, #94a3b8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        animation: slideInLeft 0.8s ease-out;
     }
+    
     .hero-text p {
         color: #94a3b8;
         margin: 0.5rem 0 0 0;
         font-size: 1.1rem;
+        animation: slideInLeft 1s ease-out 0.2s backwards;
+    }
+    
+    /* Slider animations */
+    [data-testid="stSlider"] {
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    [data-testid="stSlider"] > div > div {
+        transition: all 0.2s ease;
+    }
+    
+    /* Divider animations */
+    [data-testid="stDivider"] {
+        background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+        animation: slideInLeft 0.6s ease-out;
+    }
+    
+    /* Info boxes animations */
+    [data-testid="stAlert"] {
+        animation: slideInRight 0.5s ease-out;
+        transition: all 0.3s ease;
+    }
+    
+    [data-testid="stAlert"]:hover {
+        transform: translateX(-4px);
+    }
+    
+    /* DataFrame animations */
+    [data-testid="stDataFrame"] {
+        animation: fadeInUp 0.6s ease-out;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    /* Caption animations */
+    .stCaption {
+        color: #94a3b8;
+        animation: fadeInUp 0.4s ease-out;
+        transition: color 0.3s ease;
+    }
+    
+    /* Columns and containers - No opacity 0 to avoid visibility issues */
+    [data-testid="column"] {
+        animation: fadeInUp 0.5s ease-out;
+        transition: all 0.3s ease;
+    }
+    
+    [data-testid="column"]:nth-child(1) { animation-delay: 0.05s; }
+    [data-testid="column"]:nth-child(2) { animation-delay: 0.1s; }
+    [data-testid="column"]:nth-child(3) { animation-delay: 0.15s; }
+    [data-testid="column"]:nth-child(4) { animation-delay: 0.2s; }
+    [data-testid="column"]:nth-child(5) { animation-delay: 0.25s; }
+    
+    /* Heading animations */
+    h1, h2, h3 {
+        animation: slideInLeft 0.6s ease-out;
+        transition: all 0.3s ease;
+    }
+    
+    h2:hover, h3:hover {
+        color: #38bdf8;
+        text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+    }
+    
+    /* Selectbox animations */
+    [data-testid="stSelectbox"] {
+        animation: fadeInUp 0.5s ease-out;
+    }
+    
+    /* Custom loading state */
+    .loading-spinner {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        border: 2px solid rgba(56, 189, 248, 0.3);
+        border-top-color: #38bdf8;
+        border-radius: 100%;
+        animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -437,16 +712,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Metrics Bar
+# Metrics Bar — usando componentes nativos Streamlit
 cols = st.columns(4)
 with cols[0]:
-    st.metric("Caudal de Diseño", f"{st.session_state.Q*1000:.1f} L/s", "Constante")
+    st.metric("💧 Caudal de Diseño", f"{st.session_state.Q*1000:.1f} L/s", "Constante")
 with cols[1]:
-    st.metric("Potencia Total", f"{pot_total_kw:.1f} kW", f"{pot_total_hp:.1f} HP")
+    st.metric("⚡ Potencia Total", f"{pot_total_kw:.1f} kW", f"{pot_total_hp:.1f} HP")
 with cols[2]:
-    st.metric("Elevación Máxima", "500 m", "Tramo 4")
+    st.metric("📍 Elevación Máxima", "500 m", "Tramo 4")
 with cols[3]:
-    st.metric("Longitud Total", "3.4 km", "8 Tramos")
+    st.metric("📏 Longitud Total", "3.4 km", "8 Tramos")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -538,6 +813,37 @@ with tab_terrain:
     
     # Tabla resumen de tramos
     st.subheader("Resumen de Tramos")
+    
+    # CSS para animar tabla
+    st.markdown("""
+    <style>
+        .stDataFrame {
+            animation: fadeInUp 0.6s ease-out;
+            border-radius: 12px !important;
+        }
+        
+        .stDataFrame tbody tr {
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        .stDataFrame tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .stDataFrame tbody tr:nth-child(2) { animation-delay: 0.15s; }
+        .stDataFrame tbody tr:nth-child(3) { animation-delay: 0.2s; }
+        .stDataFrame tbody tr:nth-child(4) { animation-delay: 0.25s; }
+        .stDataFrame tbody tr:nth-child(5) { animation-delay: 0.3s; }
+        .stDataFrame tbody tr:nth-child(6) { animation-delay: 0.35s; }
+        .stDataFrame tbody tr:nth-child(7) { animation-delay: 0.4s; }
+        .stDataFrame tbody tr:nth-child(8) { animation-delay: 0.45s; }
+        
+        .stDataFrame tbody tr:hover {
+            background-color: rgba(56, 189, 248, 0.1) !important;
+            transform: translateX(4px);
+            box-shadow: inset 3px 0 0 #38bdf8;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+    
     definiciones = obtener_definicion_tramos()
     tabla_tramos = []
     for i in range(1, 9):
