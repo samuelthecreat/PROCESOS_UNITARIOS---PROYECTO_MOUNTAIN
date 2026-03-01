@@ -6,7 +6,8 @@ Desde el punto de vista de la ingeniería, todas ellas utilizan los mismos "bloq
 
 Si descompones cualquier proceso productivo, verás que es solo una secuencia ordenada de estas operaciones.
 
-- **Ejemplo:**
+- **Ejemplo:** Papaya
+
     
     - Hacer café: _Molienda_ (física) + _Extracción_ (física) + _Filtración_ (física).
         
