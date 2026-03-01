@@ -6,7 +6,7 @@ Desde el punto de vista de la ingeniería, todas ellas utilizan los mismos "bloq
 
 Si descompones cualquier proceso productivo, verás que es solo una secuencia ordenada de estas operaciones.
 
-- **Ejemplo:** Papaya
+- **Ejemplo:** 
 
     
     - Hacer café: _Molienda_ (física) + _Extracción_ (física) + _Filtración_ (física).
@@ -14,7 +14,7 @@ Si descompones cualquier proceso productivo, verás que es solo una secuencia or
     - Procesar minerales: _Molienda_ (física) + _Lixiviación_ (física) + _Filtración_ (física).
         
 
-**El principio clave:** Si aprendes cómo funciona una operación unitaria (por ejemplo, la destilación), puedes diseñar una columna de destilación para alcohol, para petróleo o para oxígeno líquido. La física subyacente es la misma.
+**El principio clave:** Si aprendes cómo funciona una operación unitaria (por ejemplo, la destilación), puedes diseñar una columna de destilación para alcohol, para petróleo o para oxígeno líquido. La física subyacente es la misma. focas verdes y azules. 
 
 ### 2. ¿Cuándo y cómo surgieron? (Historia e Hito)
 
