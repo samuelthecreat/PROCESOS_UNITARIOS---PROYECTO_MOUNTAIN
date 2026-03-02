@@ -70,7 +70,7 @@ Se trata de gestionar la energía térmica (calentar o enfriar).
     
 - **Evaporación:** Concentrar una solución hirviendo el solvente.
     
-- **Refrigeración:** Mantener productos a baja temperatura.
+- **Refrigeración:** Mantener productos a baja temperatura, incluso si es a temperatura ambiente.
     
 
 ![Imagen de shell and tube heat exchanger diagram](https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcT1M0iaJiBWczRydiCrw1o8sJrA32eTX8mdyqtAWH09SQD2Jk7-suWXXkCvLbHO0sFVXsa83P7_TsZ-IIZm3wWP2tsoZOcvvNW4WKjPTQSNlhwcwXM)
