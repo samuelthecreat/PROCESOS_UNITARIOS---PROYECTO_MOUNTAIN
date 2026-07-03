@@ -1,0 +1,60 @@
+\begin{thebibliography}{10}
+
+\bibitem{kritzinger2018digital}
+W.~Kritzinger {\em et~al.}, ``Digital twin in manufacturing: A categorical
+  literature review and classification,'' {\em IFAC-PapersOnLine}, vol.~51,
+  no.~11, pp.~1016--1022, 2018.
+
+\bibitem{gil2024survey}
+S.~Gil {\em et~al.}, ``Survey on open-source digital twin frameworks,'' {\em
+  Software Practice and Experience}, vol.~54, no.~6, pp.~929--960, 2024.
+
+\bibitem{perry2019}
+R.~Perry and D.~Green, {\em Perry's Chemical Engineers' Handbook}.
+\newblock McGraw-Hill, 9th~ed., 2019.
+
+\bibitem{robles2023opentwins}
+J.~Robles, C.~Martin, and M.~Diaz, ``Opentwins: An open-source framework for
+  compositional digital twins,'' {\em Computers in Industry}, vol.~152,
+  p.~104007, 2023.
+
+\bibitem{friedrich2025cofmupy}
+C.~Friedrich {\em et~al.}, ``Cofmpy: A python framework for fmi-based digital
+  twins,'' in {\em Proc. 2nd Int. Conf. Engineering Digital Twins}, 2025.
+
+\bibitem{dtforge2025}
+D.-F. Contributors, ``Dt-forge: Domain-agnostic python framework for digital
+  twin architectures,'' 2025.
+
+\bibitem{haussermann2024unitwin}
+T.~Hau{\ss}ermann {\em et~al.}, ``Unitwin: Universal digital twins through
+  reconfigurable container environments,'' {\em IEEE Internet Computing},
+  vol.~29, no.~1, pp.~8--15, 2024.
+
+\bibitem{tumortwin2025}
+T.~Contributors, ``Tumortwin: A python framework for patient-specific digital
+  twins in oncology,'' 2025.
+\newblock arXiv:2505.00670.
+
+\bibitem{udugama2023digital}
+I.~Udugama {\em et~al.}, ``Digital twins in food processing: Multi-layer
+  digital models,'' {\em Digital Chemical Engineering}, vol.~6, p.~100087,
+  2023.
+
+\bibitem{gamero2024data}
+E.~Gamero {\em et~al.}, ``Data management in biorefineries: Lean digital
+  twinning,'' {\em Procedia CIRP}, 2024.
+
+\bibitem{verboven2020digital}
+P.~Verboven {\em et~al.}, ``Digital twins of food process operations,'' {\em
+  Current Opinion in Food Science}, vol.~35, pp.~79--87, 2020.
+
+\bibitem{lusas1995soy}
+E.~Lusas and M.~Riaz, ``Soy protein products: processing and use,'' {\em The
+  Journal of Nutrition}, vol.~125, no.~suppl 3, pp.~573S--580S, 1995.
+
+\bibitem{kinsella1979}
+J.~Kinsella, ``Functional properties of soy proteins,'' {\em JAOCS}, vol.~56,
+  pp.~242--258, 1979.
+
+\end{thebibliography}

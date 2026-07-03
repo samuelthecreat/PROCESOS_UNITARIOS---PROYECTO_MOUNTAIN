@@ -14,37 +14,39 @@
 \node[box, right=of E0] (E1) {Etapa 1\\Extracción Alcalina};
 \node[box, right=of E1] (E1b) {Etapa 1.2\\Separación};
 \node[box, below=of E1] (E2) {Etapa 2\\Pasteurización};
-\node[box, right=of E1b] (E2b) {Etapa 2.5\\Ósmosis Inversa};
-\node[box, right=of E2b] (E3) {Etapa 3\\Evaporación};
+\node[box, right=of E1b] (E2b) {Etapa 3.1\\Ósmosis Inversa};
+\node[box, right=of E2b] (E3) {Etapa 3.2\\Evaporación};
 \node[box, below=of E3] (E4) {Etapa 4\\Precipitación};
-\node[box, right=of E4] (E5) {Etapa 5\\Secado};
-\node[box, right=of E5] (E6) {Etapa 6\\Envasado};
+\node[box, right=of E4] (E4b) {Etapa 4.2\\Centrifugación};
+\node[box, right=of E4b] (E5) {Etapa 5\\Secado};
 
+% Byproduct / Waste Nodes
+\node[box, below=3.6cm of E1b] (OK) {Okara \\ (desecho)};
+\node[box, above=of E2b] (PE) {Permeado RO \\ (recuperado)};
+\node[box, below=of E4b] (WH) {Suero \\ (desecho)};
 % Arrows - main flow
 \draw[arrow] (E0) -- node[label]{Harina} (E1);
-\draw[arrow] (E1) -- node[label]{Extracto} (E1b);
-\draw[arrow] (E1b) |- node[label]{Extracto crudo} (E2);
+\draw[arrow] (E1) -- node[label]{Lodo} (E1b);
+\draw[arrow] (E1b) |- node[label, near end, left]{Extracto} (E2);
 \draw[arrow] (E2) -| (E2b);
-\draw[arrow] (E1b) -- node[label]{Extracto} (E2b);
-\draw[arrow] (E2b) -- (E3);
-\draw[arrow] (E3) -- (E4);
-\draw[arrow] (E4) -- node[label]{Pasta húmeda} (E5);
-\draw[arrow] (E5) -- node[label]{Polvo} (E6);
-
-% Side streams
-\node[box, below=of E4] (OK) {Okara \\ (desecho)};
-\node[box, below=of E5] (WH) {Suero \\ (desecho)};
-\draw[arrow] (E1b.south) -- ++(0,-0.6) -| (OK.north);
-\draw[arrow] (E4.south) -- ++(0,-0.4) -| (WH.north);
+\draw[arrow] (E2b) -- node[label]{Retenido} (E3);
+\draw[arrow] (E3) -- node[label, left]{Concentrado} (E4);
+\draw[arrow] (E4) -- node[label]{Slurry} (E4b);
+\draw[arrow] (E4b) -- node[label]{Pasta} (E5);
+\draw[arrow] (E1b) -- (OK);
+\draw[arrow] (E2b) -- (PE);
+\draw[arrow] (E4b) -- (WH);
 
 % Input labels
 \node[above=0.3cm of E0, font=\footnotesize] {Soya 1000\,kg/h};
-\node[above=0.3cm of E1, font=\footnotesize] {Agua 12\,m$^3$/h, pH 8.5};
-\node[above=0.3cm of E5, font=\footnotesize] {185\,$^\circ$C};
+\node[above=0.3cm of E1, font=\footnotesize, align=center] {Agua 12\,m$^3$/h, pH 8.75\\+ NaOH 20\%};
+\node[above=0.3cm of E5, font=\footnotesize] {190\,$^\circ$C};
+\node[below=0.3cm of E4, font=\footnotesize] {+ HCl 10\%};
 
 % Output labels
-\node[below=0.3cm of E6, font=\footnotesize] {Polvo ISP $\sim$302\,kg/h};
-\node[below=0.5cm of OK, font=\footnotesize] {Fibra residual};
-\node[below=0.5cm of WH, font=\footnotesize] {Permeado + suero};
+\node[right=0.3cm of E5, font=\footnotesize] {Polvo ISP $\sim$301.6\,kg/h};
+\node[below=0.3cm of OK, font=\footnotesize] {Fibra residual};
+\node[above=0.3cm of PE, font=\footnotesize] {Agua recuperada};
+\node[below=0.3cm of WH, font=\footnotesize] {Suero residual};
 
 \end{tikzpicture}
